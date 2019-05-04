@@ -115,7 +115,7 @@ namespace Finalboss096
                     Name = player.Name;
                 }
             }
-            PluginManager.Manager.Server.Map.Broadcast(10, "El Mejor jugador ha sido " + Name +" El daño causado" + var2.ToString(),false);
+            PluginManager.Manager.Server.Map.Broadcast(10, "El Mejor jugador ha sido <color=#C50000> " + Name +"</color> El daño que ha causado" + var2.ToString(),false);
         }
 
         public void OnRoundStart(RoundStartEvent ev)
