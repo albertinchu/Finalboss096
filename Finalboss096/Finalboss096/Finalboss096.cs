@@ -7,7 +7,7 @@ namespace Finalboss096
         author = "Albertinchu ",
         name = "Finalboss096",
         description = "un 096 con 40000 de vida, muchos jugadores...",
-        id = "albertinchu.gamemode.FBlloron",
+        id = "albertinchu.gamemode.Finalboss096",
         version = "1.0.0",
         SmodMajor = 3,
         SmodMinor = 0,
