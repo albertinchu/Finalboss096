@@ -4,7 +4,7 @@ using scp4aiur;
 namespace Finalboss096
 {
     [PluginDetails(
-        author = "Albertinchu ",
+        author = "Albertinchu",
         name = "Finalboss096",
         description = "un 096 con 40000 de vida, muchos jugadores...",
         id = "albertinchu.gamemode.Finalboss096",

@@ -10,7 +10,7 @@ namespace Finalboss096
 {
     partial class PlayersEvents : IEventHandlerSetRole, IEventHandlerWaitingForPlayers, IEventHandlerSetConfig, IEventHandlerSetSCPConfig, IEventHandlerPlayerHurt,
     IEventHandlerRoundEnd, IEventHandlerRoundStart
-        {
+    {
         private Finalboss096 plugin;
         public PlayersEvents(Finalboss096 plugin)
         {
@@ -22,7 +22,8 @@ namespace Finalboss096
         string Name;
         Vector posboss = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.CHAOS_INSURGENCY).First();
         Vector posjgdrs = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.NTF_COMMANDER).First();
-        public static IEnumerable<float> Nuke()
+
+        public static IEnumerable<float> Bomb()
         {
             yield return 2f;
             PluginManager.Manager.Server.Map.AnnounceCustomMessage("Alert . Containment breach Detected . Automatic Self Destruction in 3 . 2 . 1");
@@ -115,11 +116,12 @@ namespace Finalboss096
                     Name = player.Name;
                 }
             }
-            PluginManager.Manager.Server.Map.Broadcast(10, "El Mejor jugador ha sido <color=#C50000> " + Name +"</color> El daño que ha causado" + var2.ToString(),false);
+            PluginManager.Manager.Server.Map.Broadcast(10, "El Mejor jugador ha sido  " + Name +" El daño que ha causado" + var2.ToString(),false);
         }
 
         public void OnRoundStart(RoundStartEvent ev)
         {
+            Timing.Run(Bomb());
            foreach(Player player in PluginManager.Manager.Server.GetPlayers())
             {
                 if(player.TeamRole.Role != Role.SCP_096)
