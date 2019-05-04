@@ -17,7 +17,8 @@ namespace Finalboss096
             this.plugin = plugin;
         }
         static Dictionary<int, float> Jugadores = new Dictionary<int, float>();
-        float var1, var2;
+        float var1;
+        float var2;
         int MVP;
         string Name;
         Vector posboss = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.CHAOS_INSURGENCY).First();
