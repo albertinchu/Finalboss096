@@ -16,13 +16,12 @@ namespace Finalboss096
         {
             this.plugin = plugin;
         }
-        static Dictionary<int, float> Jugadores = new Dictionary<int, float>();
-        float var1;
-        float var2;
-        int MVP;
-        string Name;
-        Vector posboss = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.CHAOS_INSURGENCY).First();
-        Vector posjgdrs = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.NTF_COMMANDER).First();
+        static Dictionary<string, float> Jugadores = new Dictionary<string, float>();
+        float var1 = 0;
+        float var2 = 0;
+        string MVP = "0";
+        string Name = "nadie";
+        
 
         public static IEnumerable<float> Bomb()
         {
@@ -67,16 +66,15 @@ namespace Finalboss096
             if((ev.Player.TeamRole.Role == Role.CHAOS_INSURGENCY)||(ev.Player.TeamRole.Role == Role.FACILITY_GUARD))
             {
                 ev.Player.ChangeRole(Role.CLASSD);
-                ev.Player.Teleport(posjgdrs);
+                ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.NTF_CADET),true);
             }
             if((ev.Player.TeamRole.Role == Role.CLASSD)||(ev.Player.TeamRole.Role == Role.SCIENTIST))
             {
-                ev.Player.Teleport(posjgdrs);
+                ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.NTF_CADET), true);
             }
-            if(ev.Player.TeamRole.Role == Role.SCP_096) { ev.Player.AddHealth((ev.Player.GetHealth() * 20)); }
+            if(ev.Player.TeamRole.Role == Role.SCP_096) { ev.Player.AddHealth((40000)); ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.CHAOS_INSURGENCY), true); }
             if(ev.Player.TeamRole.Team != Team.SCP) { ev.Player.SetAmmo(AmmoType.DROPPED_5, 600); ev.Player.SetAmmo(AmmoType.DROPPED_7, 600);
-                ev.Player.SetAmmo(AmmoType.DROPPED_9, 600);
-            }
+                ev.Player.SetAmmo(AmmoType.DROPPED_9, 600);   }
         }
 
         public void OnWaitingForPlayers(WaitingForPlayersEvent ev)
@@ -92,27 +90,28 @@ namespace Finalboss096
             ev.Ban173 = true;
             ev.Ban939_53 = true;
             ev.Ban939_89 = true;
+            ev.SCP096amount = 1;
         }
 
         public void OnPlayerHurt(PlayerHurtEvent ev)
         {
            if(ev.Player.TeamRole.Role == Role.SCP_096)
             {
-                Jugadores[ev.Player.PlayerId] = Jugadores[ev.Player.PlayerId] + ev.Damage;
+                Jugadores[ev.Player.SteamId] = (Jugadores[ev.Player.SteamId] + ev.Damage);
             }
         }
 
         public void OnRoundEnd(RoundEndEvent ev)
         {
             
-            foreach (KeyValuePair<int, float> key in Jugadores)
+            foreach (KeyValuePair<string, float> key in Jugadores)
             {
                 var1 = key.Value;
                 if (var1 > var2) { var2 = var1; MVP = key.Key; }
             }
             foreach (Player player in PluginManager.Manager.Server.GetPlayers())
             {
-                if(player.PlayerId == MVP)
+                if(player.SteamId == MVP)
                 {
                     Name = player.Name;
                 }
@@ -124,13 +123,13 @@ namespace Finalboss096
         {
             Timing.Run(Bomb());
            foreach(Player player in PluginManager.Manager.Server.GetPlayers())
-            {
+           {
                 if(player.TeamRole.Role != Role.SCP_096)
                 {
-                    Jugadores.Add(player.PlayerId, 0);
+                    Jugadores.Add(player.SteamId, 0);
                 }
                 
-            }
+           }
         }
     }
 }
