@@ -1,5 +1,6 @@
 ﻿using Smod2;
 using Smod2.Attributes;
+using scp4aiur;
 namespace Finalboss096
 {
     [PluginDetails(
@@ -28,7 +29,7 @@ namespace Finalboss096
         public override void Register()
         {
             GamemodeManager.Manager.RegisterMode(this);
-            
+            Timing.Init(this);
             this.AddEventHandlers(new PlayersEvents(this));
 
         }

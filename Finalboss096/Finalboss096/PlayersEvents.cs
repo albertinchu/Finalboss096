@@ -5,7 +5,7 @@ using Smod2.EventHandlers;
 using Smod2.API;
 using Smod2.Events;
 using Smod2.EventSystem.Events;
-
+using scp4aiur;
 namespace Finalboss096
 {
     partial class PlayersEvents : IEventHandlerSetRole, IEventHandlerWaitingForPlayers, IEventHandlerSetConfig, IEventHandlerSetSCPConfig, IEventHandlerPlayerHurt,
@@ -22,13 +22,22 @@ namespace Finalboss096
         string Name;
         Vector posboss = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.CHAOS_INSURGENCY).First();
         Vector posjgdrs = PluginManager.Manager.Server.Map.GetSpawnPoints(Role.NTF_COMMANDER).First();
+        public static IEnumerable<float> Nuke()
+        {
+            yield return 2f;
+            PluginManager.Manager.Server.Map.AnnounceCustomMessage("Alert . Containment breach Detected . Automatic Self Destruction in 3 . 2 . 1");
+            yield return 7f;           
+            PluginManager.Manager.Server.Map.DetonateWarhead();
+            yield return 1f;
+            PluginManager.Manager.Server.Map.DetonateWarhead();
+            yield return 1f;
+            PluginManager.Manager.Server.Map.DetonateWarhead();
+        }
 
         public void OnSetConfig(SetConfigEvent ev)
         {
             switch (ev.Key)
-            {
-                
-                   
+            {                                
                 case "auto_warhead_start":
                     ev.Value = 1800;
                     break;
@@ -117,7 +126,7 @@ namespace Finalboss096
                 {
                     Jugadores.Add(player.PlayerId, 0);
                 }
-
+                
             }
         }
     }
