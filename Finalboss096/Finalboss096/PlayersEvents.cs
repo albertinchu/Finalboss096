@@ -21,13 +21,22 @@ namespace Finalboss096
         float var2 = 0;
         string MVP = "0";
         string Name = "nadie";
-        
 
+        public static IEnumerable<float> Teleport1(Player player)
+        {
+            yield return 0.2f;
+            player.Teleport(PluginManager.Manager.Server.Map.GetSpawnPoints(Role.NTF_COMMANDER)[1], true);
+        }
+        public static IEnumerable<float> Teleport2(Player player)
+        {
+            yield return 0.2f;
+            player.Teleport(PluginManager.Manager.Server.Map.GetSpawnPoints(Role.CHAOS_INSURGENCY)[1], true);
+        }
         public static IEnumerable<float> Bomb()
         {
             yield return 2f;
             PluginManager.Manager.Server.Map.AnnounceCustomMessage("Alert . Containment breach Detected . Automatic Self Destruction in 3 . 2 . 1");
-            yield return 7f;           
+            yield return 12f;           
             PluginManager.Manager.Server.Map.DetonateWarhead();
             yield return 1f;
             PluginManager.Manager.Server.Map.DetonateWarhead();
@@ -46,10 +55,10 @@ namespace Finalboss096
                     ev.Value = false;
                     break;
                 case "default_item_classd":
-                    ev.Value = new int[] { 25,24,25,25,30,14,14 };
+                    ev.Value = new int[] { 25,24,25,25,30,14 };
                     break;
                 case "default_item_scientist":
-                    ev.Value = new int[] { 21,20,25,26,16,14,25 }; 
+                    ev.Value = new int[] { 21,20,25,26,16,14 }; 
                     break;
                 case "minimum_MTF_time_to_spawn":
                     ev.Value = 210;
@@ -66,13 +75,13 @@ namespace Finalboss096
             if((ev.Player.TeamRole.Role == Role.CHAOS_INSURGENCY)||(ev.Player.TeamRole.Role == Role.FACILITY_GUARD))
             {
                 ev.Player.ChangeRole(Role.CLASSD);
-                ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.NTF_CADET),true);
+                Timing.Run(Teleport1(ev.Player));
             }
             if((ev.Player.TeamRole.Role == Role.CLASSD)||(ev.Player.TeamRole.Role == Role.SCIENTIST))
             {
-                ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.NTF_CADET), true);
+                Timing.Run(Teleport1(ev.Player));
             }
-            if(ev.Player.TeamRole.Role == Role.SCP_096) { ev.Player.AddHealth((40000)); ev.Player.Teleport(PluginManager.Manager.Server.Map.GetRandomSpawnPoint(Role.CHAOS_INSURGENCY), true); }
+            if(ev.Player.TeamRole.Role == Role.SCP_096) { ev.Player.AddHealth((40000)); Timing.Run(Teleport2(ev.Player)); }
             if(ev.Player.TeamRole.Team != Team.SCP) { ev.Player.SetAmmo(AmmoType.DROPPED_5, 600); ev.Player.SetAmmo(AmmoType.DROPPED_7, 600);
                 ev.Player.SetAmmo(AmmoType.DROPPED_9, 600);   }
         }
@@ -97,7 +106,11 @@ namespace Finalboss096
         {
            if(ev.Player.TeamRole.Role == Role.SCP_096)
             {
-                Jugadores[ev.Player.SteamId] = (Jugadores[ev.Player.SteamId] + ev.Damage);
+				if (!Jugadores.ContainsKey(ev.Attacker.SteamId))
+				{
+					Jugadores.Add(ev.Attacker.SteamId, 0);
+				}
+            Jugadores[ev.Attacker.SteamId] = (Jugadores[ev.Attacker.SteamId] + ev.Damage);
             }
         }
 
@@ -122,14 +135,7 @@ namespace Finalboss096
         public void OnRoundStart(RoundStartEvent ev)
         {
             Timing.Run(Bomb());
-           foreach(Player player in PluginManager.Manager.Server.GetPlayers())
-           {
-                if(player.TeamRole.Role != Role.SCP_096)
-                {
-                    Jugadores.Add(player.SteamId, 0);
-                }
-                
-           }
+          
         }
     }
 }
